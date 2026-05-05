@@ -1,0 +1,33 @@
+Project Title:
+
+Sales Forecasting using Machine Learning: A Comparative Study of Linear Regression & Random Forest Regressor
+
+Synopsis:
+
+This project builds a complete end-to-end Machine Learning pipeline for sales forecasting using the Superstore Sales Dataset — a real-world retail transaction dataset containing approximately 10,000 records spanning four years (2014–2017) across multiple US regions and product categories.
+
+Beginning with thorough data preprocessing and exploratory analysis, the project progresses through feature engineering, model building, hyperparameter tuning using GridSearchCV, cross-validation, and comprehensive model evaluation. Two models are compared — Linear Regression as a baseline and Random Forest Regressor as the advanced model — evaluated using MAE, RMSE, and R² metrics. Feature importance analysis further extracts actionable business insights from the model's learned patterns.
+
+Objectives:
+
+1.	To explore, clean, and preprocess the Superstore Sales Dataset for ML readiness.
+2.	To extract meaningful features through feature engineering including temporal variables.
+3.	To perform Exploratory Data Analysis (EDA) with rich visualisations.
+4.	To build and evaluate a Linear Regression model as a baseline predictor.
+5.	To build and train a Random Forest Regressor for improved accuracy.
+6.	To apply hyperparameter tuning via GridSearchCV for model optimisation.
+7.	To validate model performance using 5-fold cross-validation.
+8.	To compare all models using MAE, RMSE, and R² evaluation metrics.
+9.	To perform feature importance analysis for business insight extraction.
+10.	To document all findings in a professional, structured project report.
+
+Tools & Technologies
+ 
+Python - Core programming language
+Pandas - Data loading, cleaning, manipulation
+NumPy - Numerical computation
+Scikit-learn - ML models, GridSearchCV, cross-validation
+Matplotlib - Data and result visualisation
+Seaborn - Statistical charts and heatmaps
+Jupyter Notebook - Latest	Interactive development environment
+Kaggle - Dataset source
