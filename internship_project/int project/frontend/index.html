@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Forecasting Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <header class="hero">
+    <nav class="topbar">
+      <div>
+        <span class="brand-mark">SF</span>
+        <span class="brand-text">Sales Forecasting Project</span>
+      </div>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#models">Models</a>
+        <a href="#gallery">Gallery</a>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <section class="hero-copy">
+        <p class="eyebrow">Machine Learning Dashboard</p>
+        <h1>Sales Forecasting with Linear Regression and Random Forest</h1>
+        <p class="lede">
+          A polished local dashboard for the Superstore Sales project, combining the model results,
+          EDA outputs, and project narrative into one browser view.
+        </p>
+      </section>
+
+      <aside class="hero-panel">
+        <div class="panel-card">
+          <span class="panel-label">Dataset</span>
+          <strong>9,994 rows</strong>
+          <span>21 columns, 2014-2017 transactions</span>
+        </div>
+        <div class="panel-card">
+          <span class="panel-label">Best Model</span>
+          <strong id="best-model-name">Loading...</strong>
+          <span id="best-model-score">Reading comparison metrics</span>
+        </div>
+        <div class="panel-card accent-card">
+          <span class="panel-label">Forecast Accuracy</span>
+          <strong id="best-model-mae">$85.62 MAE</strong>
+          <span id="best-model-rmse">RMSE $496.07</span>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section id="overview" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Project Summary</p>
+        <h2>What this project delivers</h2>
+      </div>
+
+      <div class="kpi-grid">
+        <article class="kpi-card">
+          <span>Target</span>
+          <strong>Sales amount</strong>
+          <p>Predict transaction-level revenue from retail features.</p>
+        </article>
+        <article class="kpi-card">
+          <span>Baseline</span>
+          <strong>Linear Regression</strong>
+          <p>Simple benchmark used to test linear assumptions.</p>
+        </article>
+        <article class="kpi-card">
+          <span>Advanced Model</span>
+          <strong>Random Forest</strong>
+          <p>Tree ensemble used to capture non-linear interactions.</p>
+        </article>
+        <article class="kpi-card">
+          <span>Key Evidence</span>
+          <strong>EDA + Diagnostics</strong>
+          <p>Visual analysis, residuals, feature importance, and comparison charts.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="models" class="section panel">
+      <div class="section-heading">
+        <p class="eyebrow">Model Comparison</p>
+        <h2>Performance metrics from the executed notebook</h2>
+      </div>
+
+      <div class="comparison-layout">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>MAE</th>
+                <th>RMSE</th>
+                <th>R² Score</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-body"></tbody>
+          </table>
+        </div>
+
+        <div class="metrics-panel">
+          <div class="metrics-title">Relative R² view</div>
+          <div id="score-bars" class="score-bars"></div>
+          <p class="note">
+            Lower MAE and RMSE values are better. The tuned Random Forest leads on all three metrics.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Business Details</p>
+        <h2>How the notebook is structured</h2>
+      </div>
+
+      <div class="steps-grid">
+        <article class="step-card"><span>01</span><h3>Data loading</h3><p>Read the Superstore CSV and inspect shape, types, and nulls.</p></article>
+        <article class="step-card"><span>02</span><h3>Preprocessing</h3><p>Convert dates, drop identifiers, and prepare clean features.</p></article>
+        <article class="step-card"><span>03</span><h3>Feature engineering</h3><p>Build temporal and shipping features and label encode categories.</p></article>
+        <article class="step-card"><span>04</span><h3>Modeling</h3><p>Compare Linear Regression and Random Forest with tuning.</p></article>
+      </div>
+    </section>
+
+    <section id="gallery" class="section panel">
+      <div class="section-heading">
+        <p class="eyebrow">Image Gallery</p>
+        <h2>Key EDA and model artifacts</h2>
+      </div>
+
+      <div class="gallery-grid">
+        <figure class="gallery-card"><img src="../outputs/eda_plots/sales_distribution.png" alt="Sales distribution plot"><figcaption>Sales distribution</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/eda_plots/sales_by_category.png" alt="Sales by category plot"><figcaption>Sales by category</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/eda_plots/sales_by_region.png" alt="Sales by region plot"><figcaption>Sales by region</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/eda_plots/monthly_sales_trend.png" alt="Monthly sales trend plot"><figcaption>Monthly sales trend</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/eda_plots/correlation_heatmap.png" alt="Correlation heatmap"><figcaption>Correlation heatmap</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/eda_plots/top_subcategories.png" alt="Top subcategories plot"><figcaption>Top sub-categories</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/model_results/model_comparison.png" alt="Model comparison chart"><figcaption>Model comparison</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/model_results/feature_importance.png" alt="Feature importance chart"><figcaption>Feature importance</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/model_results/actual_vs_predicted.png" alt="Actual versus predicted plot"><figcaption>Actual vs predicted</figcaption></figure>
+        <figure class="gallery-card"><img src="../outputs/model_results/residual_analysis.png" alt="Residual analysis chart"><figcaption>Residual analysis</figcaption></figure>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
