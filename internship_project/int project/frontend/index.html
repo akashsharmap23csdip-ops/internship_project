@@ -4,13 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sales Forecasting Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/frontend/style.css">
 </head>
-<body>
+<body class="is-locked">
   <div class="ambient ambient-a"></div>
   <div class="ambient ambient-b"></div>
 
-  <header class="hero">
+  <section id="intro" class="intro" aria-labelledby="intro-title">
+    <div class="intro-card">
+      <p class="intro-eyebrow">Sales Forecasting Project</p>
+      <h1 id="intro-title">Superstore Sales Forecasting Dashboard</h1>
+      <p class="intro-copy">
+        Upload your dataset to unlock the full dashboard view of the EDA, model comparisons, and
+        visual outputs.
+      </p>
+      <form id="dataset-form" class="upload-form">
+        <label class="upload-field" for="dataset-input">
+          <input id="dataset-input" type="file" accept=".csv" required>
+          <span>Choose a CSV dataset to continue</span>
+        </label>
+        <div class="upload-meta">
+          <span id="file-name">No file selected</span>
+          <span class="upload-hint">CSV format only.</span>
+        </div>
+        <button class="primary-button" type="submit">Submit dataset</button>
+        <p id="upload-status" class="upload-status" aria-live="polite">
+          Waiting for dataset selection.
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <div class="dashboard">
+    <header class="hero">
     <nav class="topbar">
       <div>
         <span class="brand-mark">SF</span>
@@ -18,6 +44,7 @@
       </div>
       <div class="nav-links">
         <a href="#overview">Overview</a>
+        <a href="#results">Results</a>
         <a href="#models">Models</a>
         <a href="#gallery">Gallery</a>
       </div>
@@ -36,8 +63,8 @@
       <aside class="hero-panel">
         <div class="panel-card">
           <span class="panel-label">Dataset</span>
-          <strong>9,994 rows</strong>
-          <span>21 columns, 2014-2017 transactions</span>
+          <strong id="dataset-rows">9,994 rows</strong>
+          <span id="dataset-meta">21 columns, 2014-2017 transactions</span>
         </div>
         <div class="panel-card">
           <span class="panel-label">Best Model</span>
@@ -53,7 +80,7 @@
     </div>
   </header>
 
-  <main class="page-shell">
+    <main class="page-shell">
     <section id="overview" class="section">
       <div class="section-heading">
         <p class="eyebrow">Project Summary</p>
@@ -82,6 +109,41 @@
           <p>Visual analysis, residuals, feature importance, and comparison charts.</p>
         </article>
       </div>
+    </section>
+
+    <section id="results" class="section panel results-section">
+      <div class="section-heading">
+        <p class="eyebrow">Model Results</p>
+        <h2>MAE, RMSE, and R² at a glance</h2>
+      </div>
+
+      <div class="results-grid">
+        <article class="metric-card wide">
+          <span>Best Model</span>
+          <strong id="best-model-badge">Loading...</strong>
+          <p id="best-model-note">Upload a dataset to refresh the results.</p>
+        </article>
+        <article class="metric-card">
+          <span>MAE</span>
+          <strong id="best-model-mae-card">$0.00</strong>
+          <p>Lower is better.</p>
+        </article>
+        <article class="metric-card">
+          <span>RMSE</span>
+          <strong id="best-model-rmse-card">$0.00</strong>
+          <p>Penalizes large errors.</p>
+        </article>
+        <article class="metric-card">
+          <span>R² Score</span>
+          <strong id="best-model-r2-card">0.0000</strong>
+          <p>Higher is better.</p>
+        </article>
+      </div>
+
+      <figure class="result-chart">
+        <img class="refreshable" src="../outputs/model_results/model_comparison.png" alt="Model comparison chart">
+        <figcaption>Model comparison chart updates after each analysis run.</figcaption>
+      </figure>
     </section>
 
     <section id="models" class="section panel">
@@ -136,20 +198,21 @@
       </div>
 
       <div class="gallery-grid">
-        <figure class="gallery-card"><img src="../outputs/eda_plots/sales_distribution.png" alt="Sales distribution plot"><figcaption>Sales distribution</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/eda_plots/sales_by_category.png" alt="Sales by category plot"><figcaption>Sales by category</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/eda_plots/sales_by_region.png" alt="Sales by region plot"><figcaption>Sales by region</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/eda_plots/monthly_sales_trend.png" alt="Monthly sales trend plot"><figcaption>Monthly sales trend</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/eda_plots/correlation_heatmap.png" alt="Correlation heatmap"><figcaption>Correlation heatmap</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/eda_plots/top_subcategories.png" alt="Top subcategories plot"><figcaption>Top sub-categories</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/model_results/model_comparison.png" alt="Model comparison chart"><figcaption>Model comparison</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/model_results/feature_importance.png" alt="Feature importance chart"><figcaption>Feature importance</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/model_results/actual_vs_predicted.png" alt="Actual versus predicted plot"><figcaption>Actual vs predicted</figcaption></figure>
-        <figure class="gallery-card"><img src="../outputs/model_results/residual_analysis.png" alt="Residual analysis chart"><figcaption>Residual analysis</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/eda_plots/sales_distribution.png" alt="Sales distribution plot"><figcaption>Sales distribution</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/eda_plots/sales_by_category.png" alt="Sales by category plot"><figcaption>Sales by category</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/eda_plots/sales_by_region.png" alt="Sales by region plot"><figcaption>Sales by region</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/eda_plots/monthly_sales_trend.png" alt="Monthly sales trend plot"><figcaption>Monthly sales trend</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/eda_plots/correlation_heatmap.png" alt="Correlation heatmap"><figcaption>Correlation heatmap</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/eda_plots/top_subcategories.png" alt="Top subcategories plot"><figcaption>Top sub-categories</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/model_results/model_comparison.png" alt="Model comparison chart"><figcaption>Model comparison</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/model_results/feature_importance.png" alt="Feature importance chart"><figcaption>Feature importance</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/model_results/actual_vs_predicted.png" alt="Actual versus predicted plot"><figcaption>Actual vs predicted</figcaption></figure>
+        <figure class="gallery-card"><img class="refreshable" src="../outputs/model_results/residual_analysis.png" alt="Residual analysis chart"><figcaption>Residual analysis</figcaption></figure>
       </div>
     </section>
-  </main>
+    </main>
+  </div>
 
-  <script src="script.js"></script>
+  <script src="/frontend/script.js"></script>
 </body>
 </html>
