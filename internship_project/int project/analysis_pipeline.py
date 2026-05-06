@@ -33,13 +33,7 @@ DROP_COLUMNS = [
 
 REQUIRED_COLUMNS = {
     "Order Date",
-    "Ship Date",
     "Sales",
-    "Ship Mode",
-    "Segment",
-    "Region",
-    "Category",
-    "Sub-Category",
 }
 
 OPTIONAL_COLUMNS_DEFAULTS = {
@@ -47,6 +41,125 @@ OPTIONAL_COLUMNS_DEFAULTS = {
     "Discount": 0.0,
     "Profit": 0.0,
 }
+
+
+def _normalize_column_name(name: str) -> str:
+    return name.strip().lower().replace("_", " ").replace("-", " ")
+
+
+def _standardize_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
+    df = df.copy()
+    notes: list[str] = []
+
+    lookup = {_normalize_column_name(col): col for col in df.columns}
+
+    def pick(*candidates: str) -> str | None:
+        for candidate in candidates:
+            key = _normalize_column_name(candidate)
+            if key in lookup:
+                return lookup[key]
+        return None
+
+    rename_map: dict[str, str] = {}
+
+    order_date_col = pick("order date", "order_date", "date", "datetime")
+    if order_date_col:
+        rename_map[order_date_col] = "Order Date"
+
+    ship_date_col = pick("ship date", "ship_date")
+    if ship_date_col:
+        rename_map[ship_date_col] = "Ship Date"
+
+    ship_mode_col = pick("ship mode", "ship_mode", "shipping mode")
+    if ship_mode_col:
+        rename_map[ship_mode_col] = "Ship Mode"
+
+    segment_col = pick("segment", "consumer", "customer segment", "customer type", "daytype", "gender")
+    if segment_col:
+        rename_map[segment_col] = "Segment"
+
+    region_col = pick("region", "market", "state", "country", "daypart")
+    if region_col:
+        rename_map[region_col] = "Region"
+
+    category_col = pick("category", "product category", "product_category", "items", "item", "product name", "product_name")
+    if category_col:
+        rename_map[category_col] = "Category"
+
+    sub_category_col = pick("sub-category", "sub_category", "subcategory")
+    if sub_category_col:
+        rename_map[sub_category_col] = "Sub-Category"
+
+    sales_col = pick("sales", "total amount", "total_amount", "total sales", "revenue", "amount")
+    if sales_col:
+        rename_map[sales_col] = "Sales"
+
+    quantity_col = pick("quantity", "qty")
+    if quantity_col:
+        rename_map[quantity_col] = "Quantity"
+
+    discount_col = pick("discount")
+    if discount_col:
+        rename_map[discount_col] = "Discount"
+
+    profit_col = pick("profit")
+    if profit_col:
+        rename_map[profit_col] = "Profit"
+
+    price_col = pick("price per unit", "price_per_unit", "unit price", "unit_price")
+    if price_col:
+        rename_map[price_col] = "Price per Unit"
+
+    df = df.rename(columns=rename_map)
+
+    if "Order Date" not in df.columns:
+        raise ValueError("Dataset must include a date column (Order Date/Date/DateTime).")
+
+    if "Ship Date" not in df.columns and "Order Date" in df.columns:
+        df["Ship Date"] = df["Order Date"]
+        notes.append("Ship Date missing; using Order Date.")
+
+    if "Ship Mode" not in df.columns:
+        df["Ship Mode"] = "Standard"
+        notes.append("Ship Mode missing; using Standard.")
+
+    if "Segment" not in df.columns:
+        df["Segment"] = "General"
+        notes.append("Segment missing; using General.")
+
+    if "Region" not in df.columns:
+        df["Region"] = "All"
+        notes.append("Region missing; using All.")
+
+    if "Category" not in df.columns:
+        df["Category"] = "Uncategorized"
+        notes.append("Category missing; using Uncategorized.")
+
+    if "Sub-Category" not in df.columns:
+        df["Sub-Category"] = df["Category"]
+        notes.append("Sub-Category missing; using Category.")
+
+    if "Sales" not in df.columns:
+        if "Price per Unit" in df.columns and "Quantity" in df.columns:
+            df["Sales"] = pd.to_numeric(df["Price per Unit"], errors="coerce") * pd.to_numeric(
+                df["Quantity"], errors="coerce"
+            )
+            notes.append("Sales derived from Price per Unit * Quantity.")
+        else:
+            bakery_hint = pick("transactionno", "transaction no") and pick("items") and pick("datetime")
+            if bakery_hint:
+                df["Sales"] = 1
+                notes.append("Sales missing; using 1 per transaction for bakery-style data.")
+            else:
+                raise ValueError(
+                    "Dataset must include a sales/amount column (Sales/Total Amount) or Price per Unit + Quantity."
+                )
+
+    for column, default_value in OPTIONAL_COLUMNS_DEFAULTS.items():
+        if column not in df.columns:
+            df[column] = default_value
+
+    return df, notes
 
 
 def _read_csv(csv_path: Path) -> pd.DataFrame:
@@ -428,9 +541,7 @@ def run_analysis(csv_path: Path, output_root: Path) -> dict[str, object]:
     if df.shape[0] < 50:
         raise ValueError("Dataset has too few rows for analysis (minimum 50).")
 
-    for column, default_value in OPTIONAL_COLUMNS_DEFAULTS.items():
-        if column not in df.columns:
-            df[column] = default_value
+    df, notes = _standardize_columns(df)
     _validate_columns(df)
     summary = _dataset_summary(df)
     df_ml = _prepare_dataframe(df)
@@ -449,4 +560,5 @@ def run_analysis(csv_path: Path, output_root: Path) -> dict[str, object]:
         "rows": results.to_dict(orient="records"),
         "best_model": best_row,
         "summary": summary,
+        "notes": notes,
     }
